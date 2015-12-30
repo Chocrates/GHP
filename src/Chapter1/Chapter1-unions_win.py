@@ -11,5 +11,5 @@ if __name__ == "__main__":
     value = raw_input("Enter the amount of barley to put into the beer vat:")
     my_barley = barley_amount(int(value))
     print "Barley amount as a long: %ld" % my_barley.barley_long
-    print "Barley amount as a int: %d" % my_barley.barley_long
-    print "Barley amount as a char: %s" % my_barley.barley_long
+    print "Barley amount as a int: %d" % my_barley.barley_int
+    print "Barley amount as a char: %s" % my_barley.barley_char
