@@ -8,7 +8,7 @@ LPSTR = POINTER(c_char)
 HANDLE = c_void_p
 
 # constants
-DEUBG_PROCESS = 0x00000001
+DEBUG_PROCESS = 0x00000001
 CREATE_NEW_CONSOLE = 0x00000010
 
 # structs for CreateProcessA()
