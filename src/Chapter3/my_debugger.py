@@ -39,7 +39,7 @@ class debugger():
                                        byref(startupinfo),
                                        byref(process_information)):
                 print "[*] We have successfully launched the process!"
-                print "[*] PID: %d" % process_information.dwPocessId
+                print "[*] PID: %d" % process_information.dwProcessId
 
             else:
                 print "[*] Error: 0x%08x." % kernel32.GetLastError()
