@@ -195,3 +195,9 @@ class debugger():
                     return False
 
             return True
+
+        def func_resolve(self, dll, function):
+            handle = kernel32.GetModuleHandleA(dll)
+            address = kernel32.GetProcAddress(handle, function)
+            kernel32.CloseHandle(handle)
+            return address
