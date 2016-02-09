@@ -76,10 +76,12 @@ class debugger():
             continue_status = DBG_CONTINUE
 
             if kernel32.WaitForDebugEvent(byref(debug_event), INFINITE):
-                # We aren't going to uild any event handlers
-                # just yet. Let's just resume the process for now.
-                raw_input("Press a key to continue")
-                self.debugger_active = False
+                # Let's obtain the thread and context information
+                self.h_thread = self.open_thread(debug_event.dwThreadId)
+                self.context = self.get_thread_context(self.h_thread)
+
+                print "Event Code: %d Thread ID: %d" % (debug_event.dwDebugEventCode, debug_event.dwThreadId)
+
                 kernel32.ContinueDebugEvent(debug_event.dwProcessId, debug_event.dwThreadId, continue_status)
 
         def detach(self):
