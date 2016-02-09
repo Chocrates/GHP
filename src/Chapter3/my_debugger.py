@@ -165,7 +165,7 @@ class debugger():
             read_buf = create_string_buffer(length)
             count = c_ulong(0)
 
-            if not kernel32.ReadProcessMemory(self.h_process, address, read_buf, length, byref(count))
+            if not kernel32.ReadProcessMemory(self.h_process, address, read_buf, length, byref(count)):
                 return False
             else:
                 data == read_buf.raw
