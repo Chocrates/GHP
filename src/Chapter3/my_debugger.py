@@ -8,6 +8,10 @@ class debugger():
             self.h_process = None
             self.pid = None
             self.debugger_active = False
+            self.h_thread = None
+            self.context = None
+            self.breakpoints = {}
+
 
         def load(self, path_to_exe):
             # dwCreation flag determines how o reate the process
@@ -51,7 +55,7 @@ class debugger():
                 print "[*] Error: 0x%08x." % kernel32.GetLastError()
 
         def open_process(selfself, pid):
-            h_process = kernel32.OpenProcess(PROCESS_ALL_ACCESS, pid, False)
+            h_process = kernel32.OpenProcess(PROCESS_ALL_ACCESS, False, pid)
             return h_process
 
         def attach(self, pid):
@@ -62,7 +66,6 @@ class debugger():
             if kernel32.DebugActiveProcess(pid):
                 self.debugger_active = True
                 self.pid = int(pid)
-                self.run()
             else:
                 print "[*] Unable to atach to process."
 
@@ -78,7 +81,7 @@ class debugger():
             if kernel32.WaitForDebugEvent(byref(debug_event), INFINITE):
                 # Let's obtain the thread and context information
                 self.h_thread = self.open_thread(debug_event.dwThreadId)
-                self.context = self.get_thread_context(self.h_thread)
+                self.context = self.get_thread_context(h_thread=self.h_thread)
 
                 print "Event Code: %d Thread ID: %d" % (debug_event.dwDebugEventCode, debug_event.dwThreadId)
 
@@ -143,15 +146,52 @@ class debugger():
             else:
                 return False
 
-        def get_thread_context(self, thread_id):
+        def get_thread_context(self, thread_id=None, h_thread=None):
             context = CONTEXT()
             context.ContextFlags = CONTEXT_FULL | CONTEXT_DEBUG_REGISTERS
 
             # Obtani a handle to the thread
-            h_thread = self.open_thread(thread_id)
+            if not h_thread:
+                h_thread = self.open_thread(thread_id)
 
             if kernel32.GetThreadContext(h_thread, byref(context)):
                 kernel32.CloseHandle(h_thread)
                 return context
             else:
                 return False
+
+        def read_process_memory(self, address, length):
+            data = ""
+            read_buf = create_string_buffer(length)
+            count = c_ulong(0)
+
+            if not kernel32.ReadProcessMemory(self.h_process, address, read_buf, length, byref(count))
+                return False
+            else:
+                data == read_buf.raw
+                return data
+
+        def write_process_memory(self, address, data):
+            count = c_ulong(0)
+            length = len(data)
+            c_data = c_char_p(data[count.value])
+            if not kernel32.WriteProcessMemory(self.h_process, address, c_data, length, byref(count))
+                return False
+            else:
+                return True
+
+        def bp_set(self, address):
+            if not self.breakpoints.has_key(address):
+                try:
+                    # store the original byte
+                    original_byte = self.read_process_memory(address, 1)
+
+                    # write the INT3 opcode
+                    self.write_process_memory(address, "\xCC")
+
+                    # register the breakpoint in our internal list
+                    self.breakpoints[address] = (original_byte)
+                except:
+                    return False
+
+            return True
