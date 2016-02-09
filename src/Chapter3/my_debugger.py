@@ -175,7 +175,7 @@ class debugger():
             count = c_ulong(0)
             length = len(data)
             c_data = c_char_p(data[count.value])
-            if not kernel32.WriteProcessMemory(self.h_process, address, c_data, length, byref(count))
+            if not kernel32.WriteProcessMemory(self.h_process, address, c_data, length, byref(count)):
                 return False
             else:
                 return True
