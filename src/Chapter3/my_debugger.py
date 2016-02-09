@@ -300,7 +300,7 @@ class debugger():
                 context.Dr7 |= condition << ((available * 4) + 16)
 
                 # Set the length
-                context.Dr7 |= length((available * 4) + 18)
+                context.Dr7 |= length << ((available * 4) + 18)
 
                 # Set the thread context with the break set
                 h_thread = self.open_thread(thread_id=thread_id)
