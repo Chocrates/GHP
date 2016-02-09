@@ -83,7 +83,7 @@ class debugger():
                 print "Event Code: %d Thread ID: %d" % (debug_event.dwDebugEventCode, debug_event.dwThreadId)
 
                 # If the event is an exception we want to exampine it further
-                if debug_event.dwDebugtEventCode == EXCEPTION_DEBUG_EVENT:
+                if debug_event.dwDebugEventCode == EXCEPTION_DEBUG_EVENT:
                     # Obtain the exception code
                     exception = debug_event.u.Exception.ExceptionRecord.ExceptionCode
                     self.exception_address = debug_event.u.Exception.ExceptionRecord.ExceptionAddress
