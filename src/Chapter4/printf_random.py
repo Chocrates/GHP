@@ -19,7 +19,9 @@ def printf_randomizer(dbg):
     # Generate a random number and pack it into binary format
     # so that it is written correctly back into the process
     random_counter = random.randint(1, 100)
+    print "[*] Random count: %d" % random_counter
     random_counter = struct.pack("L", random_counter)[0]
+
 
     # Now swap in our random number and resume the process
     dbg.write_process_memory(parameter_addr, random_counter)
@@ -39,6 +41,7 @@ dbg.attach(int(pid))
 # Set the breakpoint with the printf_randomizer function
 # Defined as a callback
 printf_address = dbg.func_resolve("msvcrt", "printf")
+print "[*] Printf address: %d" % printf_address
 dbg.bp_set(printf_address, description="printf_address", handler=printf_randomizer)
 
 # Resume the process
