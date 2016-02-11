@@ -15,6 +15,7 @@ def printf_randomizer(dbg):
     # string.  We must first unpack it before we can use it further.
     counter = struct.unpack("L", counter)[0]
     print "Counter: %d" % int(counter)
+    print dbg.dump_context()
 
     # Generate a random number and pack it into binary format
     # so that it is written correctly back into the process
