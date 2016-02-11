@@ -8,14 +8,21 @@ import random
 # This is our user defined callback function
 def printf_randomizer(dbg):
     # Read in the value of the counter at ESP + 0x08 as a DWORD
-    parameter_addr = dbg.context.Esp + 0x8
+    parameter_addr = dbg.context.Esp + 0x4
     counter = dbg.read_process_memory(parameter_addr, 4)
 
     # When we use read_process_memory, it returns a packed binary
     # string.  We must first unpack it before we can use it further.
-    counter = struct.unpack("L", counter)[0]
+    parameter_base_addr = struct.unpack("L", counter)[0]
+    string_len = 15 + 4 + 2  # "Loop iteration " the number then "!\n"
+    counter_string = dbg.read_process_memory(parameter_base_addr, int(string_len))
+    counter_string = struct.unpack(str(string_len) + "s", counter_string)[0]
+
+    counter_string = counter_string.split("!\n")[0]
+    counter = counter_string[15]
+
     print "Counter: %d" % int(counter)
-    print dbg.dump_context()
+    # print dbg.dump_context()
 
     # Generate a random number and pack it into binary format
     # so that it is written correctly back into the process
