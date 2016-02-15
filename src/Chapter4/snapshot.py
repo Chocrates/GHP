@@ -22,7 +22,7 @@ class snapshotter(object):
 
         # We now have a PID and the target is runningl lets get a second thread running to do the snapshots
         monitor_thread = threading.Thread(target=self.monitor_debugger)
-        monitor_thread.setDaemon(0)
+        monitor_thread.setDaemon()
         monitor_thread.start()
 
     def monitor_debugger(selfself):
@@ -56,7 +56,7 @@ class snapshotter(object):
         self.pid = self.dbg.pid
 
         self.dbg.run()
-        
+
 
 exe_path = "C:\\WINDOWS\\SYSTEM32\\calc.exe"
 snapshotter(exe_path)
