@@ -25,7 +25,7 @@ class snapshotter(object):
         monitor_thread.setDaemon(0)
         monitor_thread.start()
 
-    def monitor_debugger(selfself):
+    def monitor_debugger(self):
         while self.running == True:
             input = raw_input("Enter: 'snap','restore' or 'quite'")
             input = input.lower().strip()
