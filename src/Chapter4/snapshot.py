@@ -14,7 +14,7 @@ class snapshotter(object):
 
         # Start the debugger thread, and loop until it sets the pid of our target process
         pydbg_thread = threading.Thread(target=self.start_debugger)
-        pydbg_thread.setDaemon()
+        pydbg_thread.setDaemon(0)
         pydbg_thread.start()
 
         while self.pid == None:
@@ -22,7 +22,7 @@ class snapshotter(object):
 
         # We now have a PID and the target is runningl lets get a second thread running to do the snapshots
         monitor_thread = threading.Thread(target=self.monitor_debugger)
-        monitor_thread.setDaemon()
+        monitor_thread.setDaemon(0)
         monitor_thread.start()
 
     def monitor_debugger(selfself):
